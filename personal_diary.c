@@ -2,7 +2,9 @@
 #include<string.h>
 #include<stdlib.h>
 
+void welcome_message();
 int insert();
+int append();
 int view();
 
 int main()
@@ -12,7 +14,8 @@ int main()
     int num;
 First:
     printf("\n\n---- Press ----- operation ------\n\n");
-    printf("     'a' ------ add new note     \n");
+    printf("     '+' ------ add new note     \n");
+    printf("     'a' ------ append new note     \n");
     printf("     'v' ------ View Previous     \n");
     printf("     'e' ------ Exit Program     \n\n");
     printf("-------------------------------\n\n");
@@ -21,10 +24,21 @@ while(1)
 {
     scanf("%c",&press);
 
-    if (press == 'a'){
+    if (press == '+'){
         insert();
         printf("Press '1' for continue\n'0' for Exit\n");
-        scanf("%d",&num);
+        scanf("%d", &num);
+        if (num == 1){
+            goto First;
+        }
+        else{
+            break;
+        }
+    }
+    else if (press == 'a'){
+        append();
+        printf("Press '1' for continue\n'0' for Exit\n");
+        scanf("%d", &num);
         if (num == 1){
             goto First;
         }
@@ -35,7 +49,7 @@ while(1)
     else if (press == 'v'){
         view();
         printf("Press '1' for continue\n'0' for Exit\n");
-        scanf("%d",&num);
+        scanf("%d", &num);
         if (num == 1){
             goto First;
         }
@@ -53,26 +67,53 @@ while(1)
     return 0;
 }
 
-int insert(){
-    FILE *fp;
-    char note[2000], date[20] ;
+void welcome_message() {
     printf("---***---***----***----***----***---\n\n");
     printf("|<--     Welcome to our Diary    -->|\n\n");
     printf("---***---***----***----***---***---\n\n");
+}
+
+int insert(){
+    FILE *fp;
+    char note[2000], date[20] ;
+    welcome_message();
     printf("Enter date of your note : ");
-    scanf("%s",date);
+    scanf("%s", date);
     //printf("%s",date);
     printf("\n");
     printf("Just write your note from here....\n---->>");
     scanf(" %[^\n]s",note);
     fp = fopen("diary.txt", "w");
+    fprintf(fp, date);
+    fprintf(fp, "\n");
     fprintf(fp, note);
+    fprintf(fp, "\n\n");
     printf("\nSuccessfully Copied.....:)\n");
     fclose(fp);
     return 0;
 }
 
-int view(){
+int append() {
+    FILE *fp;
+    char note[2000], date[20] ;
+    welcome_message();
+    printf("Enter date of your note : ");
+    scanf("%s", date);
+    //printf("%s",date);
+    printf("\n");
+    printf("Just write your note from here....\n---->>");
+    scanf(" %[^\n]s", note);
+    fp = fopen("diary.txt", "a");
+    fprintf(fp, date);
+    fprintf(fp, "\n");
+    fprintf(fp, note);
+    fprintf(fp, "\n\n");
+    printf("\nSuccessfully Copied.....:)\n");
+    fclose(fp);
+    return 0;
+}
+
+int view() {
     FILE *fp;
     char ch;
     fp = fopen("diary.txt", "r");
@@ -84,7 +125,7 @@ int view(){
     printf("===============================================================================\n");
 
     while( ( ch = fgetc(fp) ) != EOF ){
-        printf("%c",ch);
+        printf("%c", ch);
     }
     printf("\n");
     printf("===============================================================================\n");
